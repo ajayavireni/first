@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2b3188b6-42c1-4628-b6d2-f61f850a9884" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="6371a24a-5a01-4460-b86e-11134400a298" >
+		<http:request-connection host="training4-american-ws.cloudhub.io" port="80" />
+	</http:request-config>
+	<flow name="firstFlow" doc:id="c9f1eda6-8c59-44af-a2a7-9af2ab9585ce" >
+		<http:listener doc:name="Listener" doc:id="600033cf-c435-4f0a-a722-b3cb3d9fee5f" path="/path" config-ref="HTTP_Listener_config"/>
+		<logger level="INFO" doc:name="startlogger" doc:id="4d5b8be3-23b0-4a19-9e96-2e1c838e2f87" message="flow started"/>
+		<ee:transform doc:name="Transform Message" doc:id="1f0e60ca-d560-48f3-ae05-10addb51e8a1">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "kumar"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="88f326af-0767-425d-befd-e33e6aa62cb4" variableName="var1"/>
+		<ee:transform doc:name="Transform Message" doc:id="d8964f60-e0b0-4565-a579-e5e9a48ff489" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message2":"bhjbch"
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="5b3d5213-1778-4abd-8f0b-a3d062726462" variableName="var2"/>
+		<logger level="INFO" doc:name="EndLogger" doc:id="82851348-44da-4b73-bf01-d501a10322cb" message="#[payload]"/>
+		<flow-ref doc:name="firstSub_Flow" doc:id="b05fe611-b2d9-49ac-959a-2c457e62146f" name="firstSub_Flow"/>
+		<ee:transform doc:name="Transform Message" doc:id="7b4202c5-f55e-4ecf-a5b6-b5f9dded701d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+vars.var1 ++ vars.var2 ++ vars.var3 ++ payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="406d38d3-cf6f-42e3-b22c-ba796c416f3b" message="end log"/>
+	</flow>
+	<sub-flow name="firstSub_Flow" doc:id="177c0462-09c8-4acd-9518-837066b0f004" >
+		<logger level="INFO" doc:name="Logger" doc:id="a3691e0f-2495-4744-9eef-3d3483121128" />
+		<ee:transform doc:name="Transform Message" doc:id="9af71bba-3466-4ae1-adca-6c6c07834f5c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"ajay":"name"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="01200601-bde1-4754-9bab-f0ff81723900" variableName="var3"/>
+		<logger level="INFO" doc:name="Logger" doc:id="c577f468-3ea6-479c-a4af-f7517674a8c9" />
+		<flow-ref doc:name="firstFlow1" doc:id="082c55ad-55ed-4805-8558-06cf3b3a1683" name="firstFlow1"/>
+	</sub-flow>
+	<flow name="firstFlow1" doc:id="566b9d75-d428-4370-ab87-a0ef6e692921" >
+		<logger level="INFO" doc:name="Logger" doc:id="3a99f8a3-2aac-4629-bb37-f41e042a41e9" />
+		<ee:transform doc:name="Transform Message" doc:id="ce800bee-9dca-4840-846a-677ad9f7f14c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"last":"ajay"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="41de3c0a-9cb2-4ece-b0a2-73e6bc7c9696" />
+	</flow>
+</mule>

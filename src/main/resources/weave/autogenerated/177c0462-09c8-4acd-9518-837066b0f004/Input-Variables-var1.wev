@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_177c0462_09c8_4acd_9518_837066b0f004_Input_Variables_var1 = {| message: String |}
+
